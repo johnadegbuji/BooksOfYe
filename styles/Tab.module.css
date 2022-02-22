@@ -1,0 +1,39 @@
+.tab{
+    background: #181616;
+    backdrop-filter: blur(80px);
+    height: 100px;
+    width: 100%; 
+    position: fixed;
+    bottom: 0;
+    display: flex;  
+    color: #F3EEE4;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    line-height: 140%;
+    align-items: center;
+
+
+}
+
+
+.tabLeft{
+    display: flex;
+    margin-left: 50px;
+}
+
+.tabRight{
+    display: flex;
+    margin-left: auto;
+    margin-right: 50px;
+}
+
+.ml{
+    margin-left: 40px;
+}
+
+.mr{
+    margin-right: 40px;
+}
