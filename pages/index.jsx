@@ -19,6 +19,7 @@ function App(props) {
   return (
     <>
     <Layout>
+    <img className={styles.logo} src={"/logo.png"} alt="" />
     <div className={styles.App}>
       <Card tokenId={genesis1[0]} img="4.png" color="gold" amount={genesis1.length} price={3} />
       <Card tokenId={genesis2[0]} img="3.png" color="platinum" amount={genesis2.length} />
