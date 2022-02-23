@@ -11,7 +11,7 @@ contract BookOfYe{
 
     }
 
-    function mint(uint id) public{
+    function mint(uint id) public payable{
         require(!mintedTokenTracker[id], "ID has already been minted.");
         mintedTokenTracker[id] = true; 
         mintedTokens.push(id); 
