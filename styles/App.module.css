@@ -16,3 +16,24 @@
 .welcomeScreen{
   color: #fff;
 }
+
+.welcomeScreen > p{
+  letter-spacing: 0.12em;
+text-transform: uppercase;
+}
+
+.welcomeScreen > button{
+  padding:10px;
+  font-size: large;
+  font-weight: bold;
+  border-radius: 3px;
+  border: none;
+  transition: ease .2s;
+  cursor: pointer;
+}
+
+.welcomeScreen > button:hover{
+  transform: scale(1.1);
+  background-color: black;
+  color: #FFF;
+}

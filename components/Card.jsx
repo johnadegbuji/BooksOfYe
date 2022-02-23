@@ -14,6 +14,8 @@ function Card(props) {
   const [amount, setAmount] = useState(props.amount);
   const [id, setId] = useState(props.tokenId); 
   const [tokenModal, setTokenModal] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
+
 
 
 
@@ -74,7 +76,7 @@ const handleBuyClick = async () => {
         }}
       >
         <img className={styles.tokenModalImage} src={`img/${props.img}`}/>
-        <img className="" src={`/modalCircle.png`}/>
+        <img className="rotate" src={`/modalCircle.png`}/>
        <h3>Please Sign The Transaction</h3>
       </ReactModal>
        </>

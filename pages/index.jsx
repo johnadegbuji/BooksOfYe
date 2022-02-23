@@ -16,9 +16,9 @@ function App(props) {
   const [genesis4, setGenesis4] = useState(props.cardData[3]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [metaInstalled, setMetaInstalled] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
-
     setMetaInstalled(isMetaMaskInstalled());
 
     const getAccounts = async () => {
@@ -30,7 +30,6 @@ function App(props) {
     getAccounts();
   }, [loggedIn]);
 
-
   const isMetaMaskInstalled = () => {
     //Have to check the ethereum binding on the window object to see if it's installed
     const { ethereum } = window;
@@ -39,14 +38,16 @@ function App(props) {
 
   const onClickConnect = async () => {
     try {
+      setShowSpinner(true);
       // Will open the MetaMask UI
       // You should disable this button while the request is pending!
-      await ethereum.request({ method: 'eth_requestAccounts' });
+      await ethereum.request({ method: "eth_requestAccounts" });
       const accounts = await web3.eth.getAccounts();
       setLoggedIn(accounts.length != 0);
-
+      setShowSpinner(false);
     } catch (error) {
       console.error(error);
+      setShowSpinner(false);
     }
   };
 
@@ -85,15 +86,24 @@ function App(props) {
           </div>
         ) : (
           <div className={styles.welcomeScreen}>
-          <p>welcome</p>
-          <h1>Please Connect Your Wallet</h1>
-          {metaInstalled ?
-            <button onClick={onClickConnect}>Connect MetaMask</button> :
-            <>
-            <h4>Oops, doesn't seem you have MetaMask installed.</h4>
-            <a href="https://metamask.io/download/" class="button">Install MetaMask Here</a>
-            </>
-          }
+            <p>welcome</p>
+            <h1>Please Connect Your Wallet</h1>
+            {metaInstalled ? (
+              <>
+                {showSpinner ? (
+                  <img src="/modalCircle.png" className="rotate" />
+                ) : (
+                  <button onClick={onClickConnect}>Connect MetaMask</button>
+                )}
+              </>
+            ) : (
+              <>
+                <h4>Oops, doesn't seem you have MetaMask installed.</h4>
+                <a href="https://metamask.io/download/" class="button">
+                  Install MetaMask Here
+                </a>
+              </>
+            )}
           </div>
         )}
       </Layout>
