@@ -63,19 +63,25 @@ function App(props) {
     console.log("Minted Ids: ", ids);
 
     //Remove the minted Ids from cardInfo arrays
-    for (let i = 0; i < cardInfo.length; i++) {
+    for (let i =  0; i < cardInfo.length; i++) {
       ids.forEach((mintedId) => {
-        if (cardInfo[i].includes(parseInt(mintedId))) {
-          cardInfo[i].splice(0, 1);
+        const id = parseInt(mintedId);
+        if (cardInfo[i].includes(id)) {
+          for(let j = 0; j < cardInfo[i].length; j++){
+            if (cardInfo[i][j] === id) { 
+              cardInfo[i].splice(j, 1); 
+          }
+          }
         }
       });
     }
+
 
     console.log("Card Info: ", cardInfo);
 
     const cardProps = [
       {
-        tokenId: cardInfo[0][0] == undefined ? -1 : cardInfo[0][0],
+        tokenId: cardInfo[0][0] == undefined  ? -1 : cardInfo[0][0],
         img: "4.png",
         color: "gold",
         amount: cardInfo[0].length,

@@ -30,16 +30,17 @@ const handleBuyClick = async () => {
     from: accounts[0],
     value: web3.utils.toWei(props.price.toString(), 'ether')
   });
-
   setAmount(amount - 1); 
   setId(id + 1); 
 }
   catch{
     setTokenModal(false);
   }
-
-  setTokenModal(false);
-  props.refreshInventory(); 
+  finally{
+    setTokenModal(false);
+    props.refreshInventory();
+  }
+ 
   
  
 }
