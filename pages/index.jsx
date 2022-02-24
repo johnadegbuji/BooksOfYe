@@ -13,18 +13,17 @@ function App(props) {
   const [amountLeft, setAmountLeft] = useState(props.tokensLeft);
   const [cardData, setCardData] = useState([]);
   const [saleEvent, setSaleEvent] = useState({});
-  // const [genesis1, setGenesis1] = useState(cardData[0]);
-  // const [genesis2, setGenesis2] = useState(cardData[1]);
-  // const [genesis3, setGenesis3] = useState(cardData[2]);
-  // const [genesis4, setGenesis4] = useState(cardData[3]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [metaInstalled, setMetaInstalled] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     getActiveSaleEvent();
+  }, []);
+
+  useEffect(() => {
     refreshInventory();
-    getTotalTokens();
   }, []);
 
   useEffect(() => {
@@ -32,7 +31,6 @@ function App(props) {
 
     const getAccounts = async () => {
       const accounts = await web3.eth.getAccounts();
-      // console.log(accounts);
       setLoggedIn(accounts.length != 0);
     };
 
@@ -45,7 +43,6 @@ function App(props) {
       const sEvent = await instance.methods.viewSaleStatus(i).call();
       if (sEvent[1]) {
         setSaleEvent(sEvent);
-        console.log("Sale Event: " + saleEvent);
         break;
       }
     }
@@ -60,8 +57,12 @@ function App(props) {
   };
 
   const refreshInventory = async () => {
+    //Get Minted Ids
     const ids = await instance.methods.viewMintedCards().call();
 
+    console.log("Minted Ids: ", ids);
+
+    //Remove the minted Ids from cardInfo arrays
     for (let i = 0; i < cardInfo.length; i++) {
       ids.forEach((mintedId) => {
         if (cardInfo[i].includes(parseInt(mintedId))) {
@@ -69,8 +70,38 @@ function App(props) {
         }
       });
     }
-    setCardData(cardInfo);
-    console.log(cardData);
+
+    console.log("Card Info: ", cardInfo);
+
+    const cardProps = [
+      {
+        tokenId: cardInfo[0][0] == undefined ? -1 : cardInfo[0][0],
+        img: "4.png",
+        color: "gold",
+        amount: cardInfo[0].length,
+      },
+      {
+        tokenId: cardInfo[1][0] == undefined ? -1 : cardInfo[1][0],
+        img: "3.png",
+        color: "platnium",
+        amount: cardInfo[1].length,
+      },
+      {
+        tokenId: cardInfo[2][0] == undefined ? -1 : cardInfo[2][0],
+        img: "2.png",
+        color: "crimson",
+        amount: cardInfo[2].length,
+      },
+      {
+        tokenId: cardInfo[3][0] == undefined ? -1 : cardInfo[3][0],
+        img: "1.png",
+        color: "bronze",
+        amount: cardInfo[3].length,
+      },
+    ];
+
+    setCards(cardProps);
+    getTotalTokens(); 
   };
 
   const isMetaMaskInstalled = () => {
@@ -100,36 +131,18 @@ function App(props) {
         <img className={styles.logo} src={"/logo.png"} alt="" />
         {loggedIn && metaInstalled ? (
           <div className={styles.App}>
-            <Card
+            {cards.map((card, key) => 
+              <Card
+              key={key}
               refreshInventory={refreshInventory}
-              tokenId={cardData[0][0]}
-              img="4.png"
-              color="gold"
-              amount={cardData[0].length}
-              price={3}
+              tokenId={card.tokenId}
+              img={card.img}
+              color={card.color}
+              amount={card.amount}
+              price={0.2}
             />
-            <Card
-              refreshInventory={refreshInventory}
-              tokenId={cardData[1][0]}
-              img="3.png"
-              color="platinum"
-              amount={cardData[1].length}
-            />
-            <Card
-              refreshInventory={refreshInventory}
-              tokenId={cardData[2][0]}
-              img="2.png"
-              color="crimson"
-              amount={cardData[2].length}
-              price={3}
-            />
-            <Card
-              refreshInventory={refreshInventory}
-              tokenId={cardData[3][0]}
-              img="1.png"
-              color="bronze"
-              amount={cardData[3].length}
-            />
+            )}
+            
           </div>
         ) : (
           <div className={styles.welcomeScreen}>
@@ -164,32 +177,5 @@ function App(props) {
     </>
   );
 }
-
-//COME BACK TO THIS
-
-// App.getInitialProps = async () => {
-
-//   const currentSaleEvent = getActiveSaleEvents();
-
-//   const totalTokens = getTotalTokens();
-
-//   let tokensLeft = 0;
-
-//   const refreshInventory = () => {
-
-//     }
-
-//     tokensLeft = getTotalTokens();
-//   };
-
-//   refreshInventory();
-
-//   return {
-//     cardData,
-//     totalTokens,
-//     tokensLeft,
-//     currentSaleEvent
-//   };
-// };
 
 export default App;
