@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from '../styles/Tab.module.css'
+import Countdown from 'react-countdown';
 
 
 function Tab(props) {
@@ -23,7 +24,7 @@ function Tab(props) {
             </div>
             <div>
             <p>time remaining</p>
-            <p>{props.date}</p>
+            <p><Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown></p>
             </div>
         </div>
     </div>

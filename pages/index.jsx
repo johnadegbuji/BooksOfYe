@@ -182,7 +182,6 @@ function App(props) {
         total={200}
         price={saleEvent[0]}
         stage={saleEvent[2] ? "Pre-Sale" : "Sale"}
-        date="5"
       />
 
     </>
