@@ -7,7 +7,6 @@ import styles from "../styles/App.module.css";
 import Tab from "../components/Tab";
 import Layout from "../components/Layout";
 import web3 from "../utils/web3";
-import date from "../utils/countdown.js";
 
 function App(props) {
   const [amountLeft, setAmountLeft] = useState(props.tokensLeft);
@@ -20,6 +19,7 @@ function App(props) {
 
   useEffect(() => {
     getActiveSaleEvent();
+
   }, []);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ function App(props) {
       const sEvent = await instance.methods.viewSaleStatus(i).call();
       if (sEvent[1]) {
         sEvent[0] = web3.utils.fromWei(sEvent[0], 'ether');
-        sEvent[2] = saleEvent[2] ? "Pre-Sale" : "Sale";
+        sEvent[2] = sEvent[2];
 
         setSaleEvent(sEvent);
         break;
@@ -176,13 +176,15 @@ function App(props) {
           </div>
         )}
       </Layout>
+
       <Tab
         amountLeft={amountLeft}
         total={200}
         price={saleEvent[0]}
-        stage={saleEvent[2]}
-        date="date"
+        stage={saleEvent[2] ? "Pre-Sale" : "Sale"}
+        date="5"
       />
+
     </>
   );
 }
