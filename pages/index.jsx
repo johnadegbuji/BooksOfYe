@@ -42,6 +42,9 @@ function App(props) {
     for (let i = 0; i < 5; i++) {
       const sEvent = await instance.methods.viewSaleStatus(i).call();
       if (sEvent[1]) {
+        sEvent[0] = web3.utils.fromWei(sEvent[0], 'ether');
+        sEvent[2] = saleEvent[2] ? "Pre-Sale" : "Sale";
+
         setSaleEvent(sEvent);
         break;
       }
@@ -177,7 +180,7 @@ function App(props) {
         amountLeft={amountLeft}
         total={200}
         price={saleEvent[0]}
-        stage={saleEvent[2] ? "Pre-Sale" : "Sale"}
+        stage={saleEvent[2]}
         date="date"
       />
     </>
