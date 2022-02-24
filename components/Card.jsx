@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from '../styles/Card.module.css'
 import Image from 'next/image'
 import web3 from "../utils/web3";
-import instance from "../utils/bookOfYe";
+import instance from "../utils/BooksOfYeContract";
 import Router from 'next/router'
 import ReactModal from 'react-modal';
 
@@ -26,17 +26,22 @@ const handleBuyClick = async () => {
   try{
   const accounts = await web3.eth.getAccounts();
 
+  //todo: Add preSaleMint functionality
 
-  await instance.methods.mint(id).send({
+  await instance.methods.publicMint(0,id).send({
     from: accounts[0],
+    value: web3.utils.toWei('0.2', 'ether')
   });
+
   setAmount(amount - 1); 
-  setId(id + 1); }
+  setId(id + 1); 
+}
   catch{
-    setTokenModal(false)
+    setTokenModal(false);
   }
 
-  Router.reload(window.location.pathname); 
+  setTokenModal(false);
+  props.refreshInventory(); 
   
  
 }
@@ -78,6 +83,12 @@ const handleBuyClick = async () => {
         <img className={styles.tokenModalImage} src={`img/${props.img}`}/>
         <img className="rotate" src={`/modalCircle.png`}/>
        <h3>Please Sign The Transaction</h3>
+       <p>Note that if the transaction fails on the blockchain, the purchase will be reversed</p>
+       <hr></hr>
+       <div>
+         <h5>Sodom and Gomorrah</h5>
+         <h5></h5>
+       </div>
       </ReactModal>
        </>
   )

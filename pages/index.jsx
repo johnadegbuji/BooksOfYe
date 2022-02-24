@@ -1,22 +1,31 @@
 import Head from "next/head";
 import Card from "../components/Card";
 import { useEffect, useState } from "react";
-import cardData from "../utils/cardData";
-import instance from "../utils/bookOfYe";
+import cardInfo from "../utils/cardData";
+import instance from "../utils/BooksOfYeContract";
 import styles from "../styles/App.module.css";
 import Tab from "../components/Tab";
 import Layout from "../components/Layout";
 import web3 from "../utils/web3";
+import date from "../utils/countdown.js";
 
 function App(props) {
   const [amountLeft, setAmountLeft] = useState(props.tokensLeft);
-  const [genesis1, setGenesis1] = useState(props.cardData[0]);
-  const [genesis2, setGenesis2] = useState(props.cardData[1]);
-  const [genesis3, setGenesis3] = useState(props.cardData[2]);
-  const [genesis4, setGenesis4] = useState(props.cardData[3]);
+  const [cardData, setCardData] = useState([]);
+  const [saleEvent, setSaleEvent] = useState({});
+  // const [genesis1, setGenesis1] = useState(cardData[0]);
+  // const [genesis2, setGenesis2] = useState(cardData[1]);
+  // const [genesis3, setGenesis3] = useState(cardData[2]);
+  // const [genesis4, setGenesis4] = useState(cardData[3]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [metaInstalled, setMetaInstalled] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+
+  useEffect(() => {
+    getActiveSaleEvent();
+    refreshInventory();
+    getTotalTokens();
+  }, []);
 
   useEffect(() => {
     setMetaInstalled(isMetaMaskInstalled());
@@ -29,6 +38,40 @@ function App(props) {
 
     getAccounts();
   }, [loggedIn]);
+
+  //Returns 1st active sale event that it finds from least to greatest
+  const getActiveSaleEvent = async () => {
+    for (let i = 0; i < 5; i++) {
+      const sEvent = await instance.methods.viewSaleStatus(i).call();
+      if (sEvent[1]) {
+        setSaleEvent(sEvent);
+        console.log("Sale Event: " + saleEvent);
+        break;
+      }
+    }
+  };
+
+  const getTotalTokens = () => {
+    let sum = 0;
+    cardInfo.forEach((array) => {
+      sum += array.length;
+    });
+    setAmountLeft(sum);
+  };
+
+  const refreshInventory = async () => {
+    const ids = await instance.methods.viewMintedCards().call();
+
+    for (let i = 0; i < cardInfo.length; i++) {
+      ids.forEach((mintedId) => {
+        if (cardInfo[i].includes(parseInt(mintedId))) {
+          cardInfo[i].splice(0, 1);
+        }
+      });
+    }
+    setCardData(cardInfo);
+    console.log(cardData);
+  };
 
   const isMetaMaskInstalled = () => {
     //Have to check the ethereum binding on the window object to see if it's installed
@@ -58,35 +101,39 @@ function App(props) {
         {loggedIn && metaInstalled ? (
           <div className={styles.App}>
             <Card
-              tokenId={genesis1[0]}
+              refreshInventory={refreshInventory}
+              tokenId={cardData[0][0]}
               img="4.png"
               color="gold"
-              amount={genesis1.length}
+              amount={cardData[0].length}
               price={3}
             />
             <Card
-              tokenId={genesis2[0]}
+              refreshInventory={refreshInventory}
+              tokenId={cardData[1][0]}
               img="3.png"
               color="platinum"
-              amount={genesis2.length}
+              amount={cardData[1].length}
             />
             <Card
-              tokenId={genesis3[0]}
+              refreshInventory={refreshInventory}
+              tokenId={cardData[2][0]}
               img="2.png"
               color="crimson"
-              amount={genesis3.length}
+              amount={cardData[2].length}
               price={3}
             />
             <Card
-              tokenId={genesis4[0]}
+              refreshInventory={refreshInventory}
+              tokenId={cardData[3][0]}
               img="1.png"
               color="bronze"
-              amount={genesis4.length}
+              amount={cardData[3].length}
             />
           </div>
         ) : (
           <div className={styles.welcomeScreen}>
-            <p>welcome</p>
+            <p>Welcome</p>
             <h1>Please Connect Your Wallet</h1>
             {metaInstalled ? (
               <>
@@ -99,7 +146,7 @@ function App(props) {
             ) : (
               <>
                 <h4>Oops, doesn't seem you have MetaMask installed.</h4>
-                <a href="https://metamask.io/download/" class="button">
+                <a href="https://metamask.io/download/" className="button">
                   Install MetaMask Here
                 </a>
               </>
@@ -107,47 +154,42 @@ function App(props) {
           </div>
         )}
       </Layout>
-      <Tab amountLeft={amountLeft} total={40} />
+      <Tab
+        amountLeft={amountLeft}
+        total={200}
+        price={saleEvent[0]}
+        stage={saleEvent[2] ? "Pre-Sale" : "Sale"}
+        date="date"
+      />
     </>
   );
 }
 
-const getTotalTokens = () => {
-  let sum = 0;
-  cardData.forEach((array) => {
-    sum += array.length;
-  });
-  return sum;
-};
+//COME BACK TO THIS
 
-App.getInitialProps = async () => {
-  const ids = await instance.methods.getMintedTokens().call();
+// App.getInitialProps = async () => {
 
-  const totalTokens = getTotalTokens();
+//   const currentSaleEvent = getActiveSaleEvents();
 
-  console.log(ids);
+//   const totalTokens = getTotalTokens();
 
-  let tokensLeft = 0;
+//   let tokensLeft = 0;
 
-  const refreshInventory = () => {
-    for (let i = 0; i < cardData.length; i++) {
-      ids.forEach((mintedId) => {
-        if (cardData[i].includes(parseInt(mintedId))) {
-          cardData[i].splice(0, 1);
-        }
-      });
-    }
+//   const refreshInventory = () => {
 
-    tokensLeft = getTotalTokens();
-  };
+//     }
 
-  refreshInventory();
+//     tokensLeft = getTotalTokens();
+//   };
 
-  return {
-    cardData,
-    totalTokens,
-    tokensLeft,
-  };
-};
+//   refreshInventory();
+
+//   return {
+//     cardData,
+//     totalTokens,
+//     tokensLeft,
+//     currentSaleEvent
+//   };
+// };
 
 export default App;

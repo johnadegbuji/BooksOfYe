@@ -1,8 +1,5 @@
 import "../styles/globals.css";
-import Layout from "../components/Layout";
-import Tab from "../components/Tab";
-import instance from "../utils/bookOfYe";
-import cardData from "../utils/cardData";
+
 
 function BookOfYe({ Component, pageProps, tabData }) {
   return (
