@@ -16,7 +16,6 @@ function Tab(props) {
             <p>{props.price}</p>
             </div>
         </div>
-
         <div className={styles.tabRight}>
             <div className={styles.mr}>
                 <p>stage</p>

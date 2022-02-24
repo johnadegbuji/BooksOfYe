@@ -11,8 +11,6 @@ import ReactModal from 'react-modal';
 
 function Card(props) {
 
-  const [amount, setAmount] = useState(props.amount);
-  const [id, setId] = useState(props.tokenId); 
   const [tokenModal, setTokenModal] = useState(false);
   // const [showSpinner, setShowSpinner] = useState(false);
 
@@ -25,13 +23,13 @@ const handleBuyClick = async () => {
 
   try{
   const accounts = await web3.eth.getAccounts();
+  props.refreshInventory(); 
   //todo: Add preSaleMint functionality
-  await instance.methods.publicMint(0,id).send({
+  await instance.methods.publicMint(0,props.tokenId).send({
     from: accounts[0],
     value: web3.utils.toWei(props.price.toString(), 'ether')
   });
-  setAmount(amount - 1); 
-  setId(id + 1); 
+
 }
   catch{
     setTokenModal(false);
@@ -50,13 +48,13 @@ const handleBuyClick = async () => {
     <div className={styles.card}>
         <img className={styles.cardImage} src={`img/${props.img}`}/>
         
-        {amount > 0 ?
+        {props.amount > 0 ?
         <div className={styles.cardTextContainer}>
             <p className={styles.cardBuy} onClick={handleBuyClick} >buy</p>
-            {props.color === 'gold' ? <p>{`${amount}/1`} LEFT</p> : null}
-            {props.color === 'platnium' ? <p>{`${amount}/4`} LEFT</p> : null}
-            {props.color ==='crimson' ? <p>{`${amount}/10`} LEFT</p> : null}
-            {props.color === 'bronze' ? <p>{`${amount}/25`} LEFT</p> : null}
+            {props.color === 'gold' ? <p>{`${props.amount}/1`} LEFT</p> : null}
+            {props.color === 'platnium' ? <p>{`${props.amount}/4`} LEFT</p> : null}
+            {props.color ==='crimson' ? <p>{`${props.amount}/10`} LEFT</p> : null}
+            {props.color === 'bronze' ? <p>{`${props.amount}/25`} LEFT</p> : null}
         </div> :
         <div className={styles.cardSoldOutContainer}>
             <div className={styles.soldOut}>
