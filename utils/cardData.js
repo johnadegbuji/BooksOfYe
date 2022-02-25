@@ -1,9 +1,35 @@
-const cardData = [
-    [0],
-    [1,2,3,4],
-    [5,6,7,8,9,10,11,12,13,14],
-    [15,16,17,18,19, 20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
-  ]; 
+const cardInfo = [];
 
+let inc = 0;
 
-  export default cardData;
+for (let i = 0, j = 0; i < 20; i++, j++) {
+  if (j >= 4) {
+    j = 0;
+  }
+  if (i === 0) {
+    cardInfo.push([inc]);
+  } else if (j === 0) {
+    console.log("HELLO");
+    cardInfo.push([++inc]);
+  } else if (j === 1) {
+    let ll = [];
+    for (let l = 0; l < 4; l++) {
+      ll.push(++inc);
+    }
+    cardInfo.push(ll);
+  } else if (j === 2) {
+    let ll = [];
+    for (let l = 0; l < 10; l++) {
+      ll.push(++inc);
+    }
+    cardInfo.push(ll);
+  } else if (j === 3) {
+    let ll = [];
+    for (let l = 0; l < 25; l++) {
+      ll.push(++inc);
+    }
+    cardInfo.push(ll);
+  }
+}
+
+export default cardInfo;

@@ -36,7 +36,9 @@ const handleBuyClick = async () => {
   }
   finally{
     setTokenModal(false);
+    props.isMetaMaskInstalled(); 
     props.refreshInventory();
+    props.checkIfLoggedIn();
   }
  
   
@@ -46,15 +48,15 @@ const handleBuyClick = async () => {
   return (
     <>
     <div className={styles.card}>
-        <img className={styles.cardImage} src={`img/${props.img}`}/>
+        <img className={styles.cardImage} src={`cards/${props.img}`}/>
         
         {props.amount > 0 ?
         <div className={styles.cardTextContainer}>
             <p className={styles.cardBuy} onClick={handleBuyClick} >buy</p>
             {props.color === 'gold' ? <p>{`${props.amount}/1`} LEFT</p> : null}
-            {props.color === 'platnium' ? <p>{`${props.amount}/4`} LEFT</p> : null}
+            {props.color === 'platinum' ? <p>{`${props.amount}/4`} LEFT</p> : null}
             {props.color ==='crimson' ? <p>{`${props.amount}/10`} LEFT</p> : null}
-            {props.color === 'bronze' ? <p>{`${props.amount}/25`} LEFT</p> : null}
+            {props.color === 'cobalt' ? <p>{`${props.amount}/25`} LEFT</p> : null}
         </div> :
         <div className={styles.cardSoldOutContainer}>
             <div className={styles.soldOut}>
@@ -77,7 +79,7 @@ const handleBuyClick = async () => {
           },
         }}
       >
-        <img className={styles.tokenModalImage} src={`img/${props.img}`}/>
+        <img className={styles.tokenModalImage} src={`cards/${props.img}`}/>
         <img className="rotate" src={`/modalCircle.png`}/>
        <h3>Please Sign The Transaction</h3>
        <p>Note that if the transaction fails on the blockchain, the purchase will be reversed</p>

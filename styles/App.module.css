@@ -1,11 +1,13 @@
 .App{
-  display:inline-flex;
+  display:flex;
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
   /* padding:70px; */
   flex-wrap: wrap;
   background-color: #111010;
+  margin-bottom: -250px;
+  flex-direction: column;
 }
 
 
@@ -37,3 +39,18 @@ text-transform: uppercase;
   background-color: #2b2828;
   color: #FFF;
 }
+
+
+.cardContainer{
+  display:flex;
+  justify-content: space-between
+}
+
+.cardRow{
+  margin-bottom: 40px;
+}
+
+.cardRow > h3{
+  color:white;
+}
+

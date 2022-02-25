@@ -16,10 +16,16 @@ function App(props) {
   const [metaInstalled, setMetaInstalled] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [cards, setCards] = useState([]);
+  const [cardName, setCardName] = useState([
+    "Adam & Eve",
+    "Sodom & Gomorah",
+    "Tower of Babylon",
+    "Cane & Abel",
+    "Noah's Ark",
+  ]);
 
   useEffect(() => {
     getActiveSaleEvent();
-
   }, []);
 
   useEffect(() => {
@@ -27,22 +33,22 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    setMetaInstalled(isMetaMaskInstalled());
+    isMetaMaskInstalled();
+    checkIfLoggedIn();
 
-    const getAccounts = async () => {
-      const accounts = await web3.eth.getAccounts();
-      setLoggedIn(accounts.length != 0);
-    };
+  }, []);
 
-    getAccounts();
-  }, [loggedIn]);
+  const checkIfLoggedIn = async () => {
+    const accounts = await web3.eth.getAccounts();
+    setLoggedIn(accounts.length != 0);
+  }
 
   //Returns 1st active sale event that it finds from least to greatest
   const getActiveSaleEvent = async () => {
     for (let i = 0; i < 5; i++) {
       const sEvent = await instance.methods.viewSaleStatus(i).call();
       if (sEvent[1]) {
-        sEvent[0] = web3.utils.fromWei(sEvent[0], 'ether');
+        sEvent[0] = web3.utils.fromWei(sEvent[0], "ether");
         sEvent[2] = sEvent[2];
 
         setSaleEvent(sEvent);
@@ -66,57 +72,57 @@ function App(props) {
     console.log("Minted Ids: ", ids);
 
     //Remove the minted Ids from cardInfo arrays
-    for (let i =  0; i < cardInfo.length; i++) {
+    for (let i = 0; i < cardInfo.length; i++) {
       ids.forEach((mintedId) => {
         const id = parseInt(mintedId);
         if (cardInfo[i].includes(id)) {
-          for(let j = 0; j < cardInfo[i].length; j++){
-            if (cardInfo[i][j] === id) { 
-              cardInfo[i].splice(j, 1); 
-          }
+          for (let j = 0; j < cardInfo[i].length; j++) {
+            if (cardInfo[i][j] === id) {
+              cardInfo[i].splice(j, 1);
+            }
           }
         }
       });
     }
-
-
     console.log("Card Info: ", cardInfo);
 
-    const cardProps = [
-      {
-        tokenId: cardInfo[0][0] == undefined  ? -1 : cardInfo[0][0],
-        img: "4.png",
-        color: "gold",
-        amount: cardInfo[0].length,
-      },
-      {
-        tokenId: cardInfo[1][0] == undefined ? -1 : cardInfo[1][0],
-        img: "3.png",
-        color: "platnium",
-        amount: cardInfo[1].length,
-      },
-      {
-        tokenId: cardInfo[2][0] == undefined ? -1 : cardInfo[2][0],
-        img: "2.png",
-        color: "crimson",
-        amount: cardInfo[2].length,
-      },
-      {
-        tokenId: cardInfo[3][0] == undefined ? -1 : cardInfo[3][0],
-        img: "1.png",
-        color: "bronze",
-        amount: cardInfo[3].length,
-      },
-    ];
+    const cardProps = [];
 
+    const colorways = ["gold", "platinum", "crimson", "cobalt"];
+
+    let cardRow = [];
+
+    for (let i = 0, j = 0; i < cardInfo.length; i++, j++) {
+      if (j == 4) {
+        j = 0;
+        cardProps.push(cardRow);
+        cardRow = [];
+      }
+
+      const card = {
+        tokenId: cardInfo[i][0] == undefined ? -1 : cardInfo[i][0],
+        img: `${i}.png`,
+        color: colorways[j],
+        amount: cardInfo[i].length,
+      };
+
+      cardRow.push(card);
+
+      if (i === cardInfo.length - 1) {
+        cardProps.push(cardRow);
+      }
+    }
+
+    console.log(cardProps);
     setCards(cardProps);
-    getTotalTokens(); 
+    getTotalTokens();
   };
 
   const isMetaMaskInstalled = () => {
     //Have to check the ethereum binding on the window object to see if it's installed
     const { ethereum } = window;
-    return Boolean(ethereum && ethereum.isMetaMask);
+    
+    setMetaInstalled(Boolean(ethereum && ethereum.isMetaMask));
   };
 
   const onClickConnect = async () => {
@@ -140,18 +146,30 @@ function App(props) {
         <img className={styles.logo} src={"/logo.png"} alt="" />
         {loggedIn && metaInstalled ? (
           <div className={styles.App}>
-            {cards.map((card, key) => 
-              <Card
-              key={key}
-              refreshInventory={refreshInventory}
-              tokenId={card.tokenId}
-              img={card.img}
-              color={card.color}
-              amount={card.amount}
-              price={0.2}
-            />
-            )}
-            
+            {cards.map((cardArray, key) => {
+              return (
+                <div className={styles.cardRow}>
+                  <h3>{cardName[key]}</h3>
+                  <div className={styles.cardContainer}>
+                    {cardArray.map((card, key) => {
+                      return (
+                        <Card
+                          key={key}
+                          refreshInventory={refreshInventory}
+                          isMetaMaskInstalled={isMetaMaskInstalled}
+                          checkIfLoggedIn={checkIfLoggedIn}
+                          tokenId={card.tokenId}
+                          img={card.img}
+                          color={card.color}
+                          amount={card.amount}
+                          price={saleEvent[0]}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className={styles.welcomeScreen}>
@@ -183,7 +201,6 @@ function App(props) {
         price={saleEvent[0]}
         stage={saleEvent[2] ? "Pre-Sale" : "Sale"}
       />
-
     </>
   );
 }
