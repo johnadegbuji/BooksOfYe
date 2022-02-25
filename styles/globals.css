@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+@font-face {
+  font-family: 'Vaporetta';
+  src: url('../public/fonts/vaporetta_regular.woff2') format('woff2'),
+       url('../public/fonts/vaporetta_regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 html,
 body {
   padding: 0;

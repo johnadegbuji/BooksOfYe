@@ -7,23 +7,23 @@ function Tab(props) {
   return (
     <div className={styles.tab}>
         <div className={styles.tabLeft}>
-            <div>
-                <p>cards remaining</p>
-                <p>{`${props.amountLeft}/${props.total}`}</p>
+            <div className={styles.cardsRemaining}>
+                <p className={styles.headerText}>Cards Remaining</p>
+                <p className={styles.valuesText}>{`${props.amountLeft}/${props.total}`}</p>
             </div>
             <div className={styles.ml}>
-            <p>current price</p>
-            <p>{props.price}</p>
+            <p className={styles.headerText}>Current Price</p>
+            <p className={styles.valuesText}>{props.price}</p>
             </div>
         </div>
         <div className={styles.tabRight}>
             <div className={styles.mr}>
-                <p>stage</p>
-                <p>{props.stage}</p>
+                <p className={styles.headerText}>Stage</p>
+                <p className={styles.valuesText}>{props.stage}</p>
             </div>
-            <div>
-            <p>time remaining</p>
-            <p><Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown></p>
+            <div className={styles.timeRemaining}>
+            <p className={styles.headerText}>Time Remaining</p>
+            <p className={styles.valuesText}><Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown></p>
             </div>
         </div>
     </div>

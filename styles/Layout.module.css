@@ -3,3 +3,12 @@
     width: 90%;
     margin: auto;
 }
+
+@media only screen and (max-width: 600px) {
+    .layout{
+        max-width: 1875px;
+        width: 90%;
+        margin: auto;
+    }
+
+}

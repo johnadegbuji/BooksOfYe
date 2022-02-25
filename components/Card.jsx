@@ -53,10 +53,10 @@ const handleBuyClick = async () => {
         {props.amount > 0 ?
         <div className={styles.cardTextContainer}>
             <p className={styles.cardBuy} onClick={handleBuyClick} >buy</p>
-            {props.color === 'gold' ? <p>{`${props.amount}/1`} LEFT</p> : null}
-            {props.color === 'platinum' ? <p>{`${props.amount}/4`} LEFT</p> : null}
-            {props.color ==='crimson' ? <p>{`${props.amount}/10`} LEFT</p> : null}
-            {props.color === 'cobalt' ? <p>{`${props.amount}/25`} LEFT</p> : null}
+            {props.color === 'gold' ? <p className={styles.inventoryText}>{`${props.amount}/1`} LEFT</p> : null}
+            {props.color === 'platinum' ? <p className={styles.inventoryText}>{`${props.amount}/4`} LEFT</p> : null}
+            {props.color ==='crimson' ? <p className={styles.inventoryText}>{`${props.amount}/10`} LEFT</p> : null}
+            {props.color === 'cobalt' ? <p className={styles.inventoryText}>{`${props.amount}/25`} LEFT</p> : null}
         </div> :
         <div className={styles.cardSoldOutContainer}>
             <div className={styles.soldOut}>
@@ -81,11 +81,11 @@ const handleBuyClick = async () => {
       >
         <img className={styles.tokenModalImage} src={`cards/${props.img}`}/>
         <img className="rotate" src={`/modalCircle.png`}/>
-       <h3>Please Sign The Transaction</h3>
-       <p>Note that if the transaction fails on the blockchain, the purchase will be reversed</p>
-       <hr></hr>
+       <h3 className={styles.tokenModalHeading}>Please Sign The Transaction</h3>
+       <p className={styles.tokenModalText}>Note that if the transaction fails on the blockchain, the purchase will be reversed</p>
+       <hr className={styles.line}></hr>
        <div>
-         <h5>Sodom and Gomorrah</h5>
+         <h5 className={styles.tokenModalHeading}>Sodom and Gomorrah</h5>
          <h5></h5>
        </div>
       </ReactModal>

@@ -1,12 +1,15 @@
+
+
 .App{
   display:flex;
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
   /* padding:70px; */
+  padding-bottom: 70px;
   flex-wrap: wrap;
   background-color: #111010;
-  margin-bottom: -250px;
+  margin-bottom: -300px;
   flex-direction: column;
 }
 
@@ -43,7 +46,8 @@ text-transform: uppercase;
 
 .cardContainer{
   display:flex;
-  justify-content: space-between
+  justify-content: space-between;
+  margin-bottom: 50px;
 }
 
 .cardRow{
@@ -53,4 +57,71 @@ text-transform: uppercase;
 .cardRow > h3{
   color:white;
 }
+.cardNames{
+  font-family: 'Vaporetta';
+  color: white;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 40px;
+  line-height: 94.5%;
+}
+.bookPassage{
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 13px;
+line-height: 140%;
+margin-bottom: -30px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
 
+color: #FFFFFF;
+}
+
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .logo{
+    margin: 40px 20px;
+  }
+  .cardRow{
+    margin-bottom: 60px;
+  }
+
+  .cardContainer{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 15px;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    /* padding: 40px; */
+  }
+
+  .cardNames{
+    font-family: 'Vaporetta';
+    color: white;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 40px;
+    line-height: 94.5%;
+    margin-left: 20px;
+  }
+  .bookPassage{
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 140%;
+  margin-left: 20px;
+  margin-bottom: -30px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  
+  color: #FFFFFF;
+  }
+
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {}
