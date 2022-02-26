@@ -11,7 +11,7 @@ module.exports = async function (deployer) {
 
   await contract.editSaleStatus(3, true, false, true);
 
-  await contract.alterMintLimit(1);
+  // await contract.alterMintLimit(1);
 
   // await contract.editSalePrice(0, "6000000000000000000");
 

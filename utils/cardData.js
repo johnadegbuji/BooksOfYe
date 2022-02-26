@@ -9,7 +9,6 @@ for (let i = 0, j = 0; i < 20; i++, j++) {
   if (i === 0) {
     cardInfo.push([inc]);
   } else if (j === 0) {
-    console.log("HELLO");
     cardInfo.push([++inc]);
   } else if (j === 1) {
     let ll = [];
