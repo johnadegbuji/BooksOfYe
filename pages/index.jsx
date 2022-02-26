@@ -191,8 +191,8 @@ function App(props) {
         </div>
         ) : (
           <div className={styles.welcomeScreen}>
-            <p>Welcome</p>
-            <h1>Please Connect Your Wallet</h1>
+            <p className={styles.welcomeSubText}>Welcome</p>
+            <h1 className={styles.welcomeScreenText}>Please Connect Your Wallet</h1>
             {metaInstalled ? (
               <>
                 {showSpinner ? (
