@@ -25,12 +25,24 @@
   font-weight: 600;
   font-size: 13px;
   margin-bottom: -25px;
+  color: white;
+
 }
 .welcomeScreenText{
   font-family: "Vaporetta";
   font-style: normal;
   font-weight: 400;
   font-size: 60px;
+  color: white;
+}
+
+.welcomeScreenText2{
+  font-family: "Vaporetta";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 60px;
+  color: white;
+  width: 50%
 }
 
 .welcomeScreen > p{

@@ -2,6 +2,10 @@ import React from 'react'
 import styles from '../styles/Tab.module.css'
 import Countdown from 'react-countdown';
 
+const timerUpdate = () =>{
+    
+    
+}
 
 function Tab(props) {
   return (
@@ -23,7 +27,7 @@ function Tab(props) {
             </div>
             <div className={styles.timeRemaining}>
             <p className={styles.headerText}>Time Remaining</p>
-            <p className={styles.valuesText}><Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown></p>
+            <p className={styles.valuesText}><Countdown date={"2022-02-28T13:00:00.000+08:00"} onComplete={timerUpdate()}></Countdown></p>
             </div>
         </div>
     </div>

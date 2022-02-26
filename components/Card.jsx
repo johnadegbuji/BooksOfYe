@@ -106,6 +106,8 @@ function Card(props) {
         <img className={styles.tokenModalImage} src={`cards/${props.img}`} />
         {!showMintResult ? (
           <>
+          <div className={styles.responseContainer}>
+
             <img className="rotate" src={`/modalCircle.png`} />
             <h3 className={styles.tokenModalHeading}>
               Please Sign The Transaction
@@ -129,6 +131,7 @@ function Card(props) {
                 </div>
               </div>
             </div>
+          </div>
           </>
         ) : (
           <div className={styles.responseContainer}>

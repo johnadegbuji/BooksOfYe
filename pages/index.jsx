@@ -7,6 +7,8 @@ import styles from "../styles/App.module.css";
 import Tab from "../components/Tab";
 import Layout from "../components/Layout";
 import web3 from "../utils/web3";
+import Countdown from 'react-countdown';
+
 
 function App(props) {
   const [amountLeft, setAmountLeft] = useState(props.tokensLeft);
@@ -171,8 +173,9 @@ function App(props) {
                     tokenId={card.tokenId}
                     img={card.img}
                     color={card.color}
+                    cardName={cardName[key]}
                     amount={card.amount}
-                    price={saleEvent[0]}
+                    price={saleEvent.price}
                   />
                 );
               })}
@@ -185,8 +188,8 @@ function App(props) {
 
   const displayConnectScreen = (
     <div className={styles.welcomeScreen}>
-      <p>Welcome</p>
-      <h1>Please Connect Your Wallet</h1>
+      <p className={styles.welcomeSubText}>WELCOME</p>
+      <h1 className={styles.welcomeScreenText}>Please Connect Your Wallet</h1>
       {metaInstalled ? (
         <>
           {showSpinner ? (
@@ -220,19 +223,63 @@ function App(props) {
 
       if (!isPreSale && !isPublicSale) {
         if (isWhiteListed) {
-          return <h1>You are on whitelist but no active sale</h1>;
-        } else {
-          return <h1>Public Sale will begin after pre-sale.</h1>;
-        }
+          return (
+          <>
+          <p className={styles.welcomeSubText}>THANK YOU</p>;
+          <h1 className={styles.welcomeScreenText}>
+            You are on the whitelist. 
+            <br></br><br></br>The Pre-Sale begins in: <Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown>
+          </h1>;
+          </>
+        )
+          
+        } else if(!isWhiteListed && !isPreSale && !isPublicSale) {
+          return ( 
+          <>
+          <p className={styles.welcomeSubText}>THANK YOU</p>
+          <h1 className={styles.welcomeScreenText2}>
+            The Sale will begin after the Pre-Sale has finished, if there is remaining stock. 
+            <br></br><br></br>The Pre-Sale begins in: <Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown>
+          </h1>;
+          
+          </>
+         
+          
+          );
+        } 
       } else if (isActive && isPreSale && isWhiteListed) {
         return displayCards;
       } else if (isActive && isPublicSale && !isPreSale) {
         return displayCards;
+      } else if(isPreSale && !isPublicSale && !isWhiteListed ) {
+        return ( 
+        <>
+        <p className={styles.welcomeSubText}>THANK YOU</p>
+        <h1 className={styles.welcomeScreenText2}>
+        The Sale will begin after the Pre-Sale has finished, if there is remaining stock. 
+        </h1>;
+        
+        </>
+       
+        
+        );
       }
     } else {
       return displayConnectScreen;
     }
   };
+
+  const preSaleOrPublic = () =>{
+    if(!saleEvent.isPresale && !saleEvent.isPublicSale){
+      return "Pre-Sale";
+    } 
+    else if (saleEvent.isPresale && !saleEvent.isPublicSale) {
+      return "Pre-Sale";
+    }
+    else if (!saleEvent.isPresale && saleEvent.isPublicSale) {
+      return "Sale"; 
+    }
+  }
 
   return (
     <>
@@ -244,7 +291,7 @@ function App(props) {
         amountLeft={amountLeft}
         total={200}
         price={saleEvent.price}
-        stage={saleEvent.isPreSale ? "Pre-Sale" : "Sale"}
+        stage={preSaleOrPublic()}
       />
     </>
   );

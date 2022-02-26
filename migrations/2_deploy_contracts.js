@@ -7,9 +7,9 @@ module.exports = async function (deployer) {
 
   await contract.setPriceAndInventory();
 
-  await contract.editSaleStatus(0, true, false, true);
+  await contract.editSaleStatus(0, true, false, false);
 
-  await contract.editSaleStatus(3, true, false, true);
+  // await contract.editSaleStatus(3, true, false, true);
 
   // await contract.alterMintLimit(1);
 

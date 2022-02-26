@@ -178,8 +178,11 @@
 }
 
 .closeModal{
-right: 90%;
-top: 4%;
+margin-left: 20px;
+margin-top: 20px;
+margin-right: auto;
+left: 0;
+top: 0;
 position: absolute;
 cursor: pointer;
 }
@@ -196,10 +199,17 @@ cursor: pointer;
 
 .errorMessage{
   display: block;
-  /* position: relative; */
-  /* width: 10%; */
-  /* margin-left: auto;
-  margin-right: auto; */
+  font-family: 'Vaporetta';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  width: 70%;
+  text-align: center;
+  font-size: 18px;
+  margin-top: -5px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #D0CDCD;
 }
 
 .etherIcon{
