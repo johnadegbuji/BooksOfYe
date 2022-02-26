@@ -30,6 +30,7 @@ a {
 
 
 .rotate {
+  margin-top: -50px;
   animation: rotation 4s infinite linear;
 }
 

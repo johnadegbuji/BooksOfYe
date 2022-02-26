@@ -17,11 +17,11 @@ function App(props) {
   const [showSpinner, setShowSpinner] = useState(false);
   const [cards, setCards] = useState([]);
   const [cardName, setCardName] = useState([
-    "Adam & Eve",
-    "Sodom & Gomorah",
-    "Tower of Babylon",
-    "Cane & Abel",
+    "Let There Be Light",
+    "Garden Of Eden",
     "Noah's Ark",
+    "The Tower Of Babel",
+    "Lot's Wife"
   ]);
   const [bookPassage, setBookPassage] = useState([
     "Genesis 1:3",
@@ -168,10 +168,11 @@ function App(props) {
                 <h5 className={styles.bookPassage}>{bookPassage[key]}</h5>
                 <h3 className={styles.cardNames}>{cardName[key]}</h3>
                 <div className={styles.cardContainer}>
-                  {cardArray.map((card, key) => {
+                  {cardArray.map((card) => {
                     return (
                       <Card
-                        key={key}
+                        key={card.tokenId}
+                        cardName={cardName[key]}
                         refreshInventory={refreshInventory}
                         isMetaMaskInstalled={isMetaMaskInstalled}
                         checkIfLoggedIn={checkIfLoggedIn}
@@ -217,7 +218,7 @@ function App(props) {
         total={200}
         price={saleEvent[0]}
         stage={saleEvent[2] ? "Pre-Sale" : "Sale"}
-        
+
       />
     </>
   );

@@ -3,7 +3,7 @@ import BooksOfYe from "../build/contracts/BooksOfYe.json";
 
   const instance = new web3.eth.Contract(
     BooksOfYe.abi,
-    "0xc523d8c4B2aD0f915CD1e476AF93fe3C25E05984"
+    "0x5539739445b0606FB70Bbe95A5fAD87361FBB203"
   );
 
 export default instance;

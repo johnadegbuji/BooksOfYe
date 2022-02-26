@@ -1,71 +1,87 @@
-import React, { useState } from 'react'
-import styles from '../styles/Card.module.css'
-import Image from 'next/image'
+import React, { useState } from "react";
+import styles from "../styles/Card.module.css";
+import Image from "next/image";
 import web3 from "../utils/web3";
 import instance from "../utils/BooksOfYeContract";
-import Router from 'next/router'
-import ReactModal from 'react-modal';
-
-
-
+import Router from "next/router";
+import ReactModal from "react-modal";
 
 function Card(props) {
-
   const [tokenModal, setTokenModal] = useState(false);
-  // const [showSpinner, setShowSpinner] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [mintWasSuccessful, setMintWasSuccessful] = useState(false);
+  const [showMintResult, setShowMintResult] = useState(false);
 
+  const handleBuyClick = async () => {
+    setTokenModal(true);
 
+    try {
+      const accounts = await web3.eth.getAccounts();
+      props.refreshInventory();
+      //todo: Add preSaleMint functionality
+      await instance.methods.publicMint(0, props.tokenId).send({
+        from: accounts[0],
+        value: web3.utils.toWei(props.price.toString(), "ether"),
+      });
+      if (!showMintResult) {
+        setShowMintResult(true);
+        setMintWasSuccessful(true);
+      }
+    } catch (e) {
+      setErrorMessage(e.message);
+      if (!showMintResult) {
+        setShowMintResult(true);
+        setMintWasSuccessful(false);
+      }
+    } finally {
+      props.isMetaMaskInstalled();
+      props.refreshInventory();
+      props.checkIfLoggedIn();
+    }
+  };
 
-
-const handleBuyClick = async () => {
-
-  setTokenModal(true); 
-
-  try{
-  const accounts = await web3.eth.getAccounts();
-  props.refreshInventory(); 
-  //todo: Add preSaleMint functionality
-  await instance.methods.publicMint(0,props.tokenId).send({
-    from: accounts[0],
-    value: web3.utils.toWei(props.price.toString(), 'ether')
-  });
-
-}
-  catch{
-    setTokenModal(false);
-  }
-  finally{
-    setTokenModal(false);
-    props.isMetaMaskInstalled(); 
-    props.refreshInventory();
-    props.checkIfLoggedIn();
-  }
- 
-  
- 
-}
+  const formatErrorMessage = () => {
+    if (errorMessage.includes("Mint Limit Reached"))
+      return "Mint Limit Reached";
+    else return errorMessage.replace("MetaMask Tx Signature:", "");
+  };
 
   return (
     <>
-    <div className={styles.card}>
-        <img className={styles.cardImage} src={`cards/${props.img}`}/>
-        
-        {props.amount > 0 ?
-        <div className={styles.cardTextContainer}>
-            <p className={styles.cardBuy} onClick={handleBuyClick} >buy</p>
-            {props.color === 'gold' ? <p className={styles.inventoryText}>{`${props.amount}/1`} LEFT</p> : null}
-            {props.color === 'platinum' ? <p className={styles.inventoryText}>{`${props.amount}/4`} LEFT</p> : null}
-            {props.color ==='crimson' ? <p className={styles.inventoryText}>{`${props.amount}/10`} LEFT</p> : null}
-            {props.color === 'cobalt' ? <p className={styles.inventoryText}>{`${props.amount}/25`} LEFT</p> : null}
-        </div> :
-        <div className={styles.cardSoldOutContainer}>
+      <div className={styles.card}>
+        <img className={styles.cardImage} src={`cards/${props.img}`} />
+
+        {props.amount > 0 ? (
+          <div className={styles.cardTextContainer}>
+            <p className={styles.cardBuy} onClick={handleBuyClick}>
+              buy
+            </p>
+            {props.color === "gold" ? (
+              <p className={styles.inventoryText}>{`${props.amount}/1`} LEFT</p>
+            ) : null}
+            {props.color === "platinum" ? (
+              <p className={styles.inventoryText}>{`${props.amount}/4`} LEFT</p>
+            ) : null}
+            {props.color === "crimson" ? (
+              <p className={styles.inventoryText}>
+                {`${props.amount}/10`} LEFT
+              </p>
+            ) : null}
+            {props.color === "cobalt" ? (
+              <p className={styles.inventoryText}>
+                {`${props.amount}/25`} LEFT
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <div className={styles.cardSoldOutContainer}>
             <div className={styles.soldOut}>
               <img src={`/check.png`} alt="" />
               <p>sold out</p>
             </div>
-        </div>
-         }
-    </div>
+          </div>
+        )}
+      </div>
       <ReactModal
         className={styles.tokenModal}
         isOpen={tokenModal}
@@ -79,20 +95,93 @@ const handleBuyClick = async () => {
           },
         }}
       >
-        <img className={styles.tokenModalImage} src={`cards/${props.img}`}/>
-        <img className="rotate" src={`/modalCircle.png`}/>
-       <h3 className={styles.tokenModalHeading}>Please Sign The Transaction</h3>
-       <p className={styles.tokenModalText}>Note that if the transaction fails on the blockchain, the purchase will be reversed</p>
-       <hr className={styles.line}></hr>
-       <div>
-         <h5 className={styles.tokenModalHeading}>Sodom and Gomorrah</h5>
-         <h5></h5>
-       </div>
+        <img
+          className={styles.closeModal}
+          src={`close_x.png`}
+          onClick={() => {
+            setTokenModal(false);
+            setShowMintResult(false);
+          }}
+        />
+        <img className={styles.tokenModalImage} src={`cards/${props.img}`} />
+        {!showMintResult ? (
+          <>
+            <img className="rotate" src={`/modalCircle.png`} />
+            <h3 className={styles.tokenModalHeading}>
+              Please Sign The Transaction
+            </h3>
+            <div className={styles.messageContainer}>
+              <p className={styles.tokenModalText}>
+                Note that if the transaction fails on the blockchain, the
+                purchase will be reversed
+              </p>
+              <hr className={styles.line}></hr>
+              <div className={styles.tokenModalLower}>
+                <div className={styles.tokenModalLowerLeft}>
+                  <h5 className={styles.tokenModalCardName}>
+                    {props.cardName}
+                  </h5>
+                  <h5 className={styles.tokenModalCardColor}>{props.color}</h5>
+                </div>
+                <div className={styles.tokenModalLowerRight}>
+                  <img className={styles.etherIcon} src="/ether.png"></img>
+                  <h5 className={styles.tokenModalPrice}>{props.price}</h5>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className={styles.responseContainer}>
+            {mintWasSuccessful ? (
+              <>
+                <img className={styles.modalStatusImage} src="/Checkmark.png" />
+                <h3 className={styles.tokenModalHeading}>Card Reserved</h3>
+                <div className={styles.messageContainer}>
+                  <p className={styles.tokenModalText}>
+                    Note that if the transaction fails on the blockchain, the
+                    purchase will be reversed
+                  </p>
+                  <hr className={styles.line}></hr>
+                <div className={styles.tokenModalLower}>
+                  <div className={styles.tokenModalLowerLeft}>
+                    <h5 className={styles.tokenModalCardName}>{props.cardName}</h5>
+                    <h5 className={styles.tokenModalCardColor}>{props.color}</h5>
+                  </div>
+                  <div className={styles.tokenModalLowerRight}>
+                      <img className={styles.etherIcon} src="/ether.png"></img>
+                      <h5 className={styles.tokenModalPrice}>{props.price}</h5>
+                  </div>
+                </div>
+                </div>
+                
+              </>
+            ) : (
+              <>
+                <img className={styles.modalStatusImage} src="/failed.png" />
+                <h3 className={styles.tokenModalHeading}>Transaction Failed</h3>
+                <div className={styles.messageContainer}>
+                  <p className={styles.errorMessage}>{formatErrorMessage()}</p>
+                  <hr className={styles.line}></hr>
+                <div className={styles.tokenModalLower}>
+                    <div className={styles.tokenModalLowerLeft}>
+                      <h5 className={styles.tokenModalCardName}>
+                        {props.cardName}
+                      </h5>
+                      <h5 className={styles.tokenModalCardColor}>{props.color}</h5>
+                    </div>
+                    <div className={styles.tokenModalLowerRight}>
+                      <img className={styles.etherIcon} src="/ether.png"></img>
+                      <h5 className={styles.tokenModalPrice}>{props.price}</h5>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </ReactModal>
-       </>
-  )
+    </>
+  );
 }
 
-
-
-export default Card
+export default Card;
