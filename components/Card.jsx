@@ -16,18 +16,35 @@ function Card(props) {
     setTokenModal(true);
 
     try {
+
+      props.getActiveSaleEvent(); 
+
       const accounts = await web3.eth.getAccounts();
       props.refreshInventory();
-      //todo: Add preSaleMint functionality
-      await instance.methods.publicMint(0, props.tokenId).send({
+
+      await props.checkIfWhiteListed(); 
+
+      console.log(props.isWhiteListed)
+      
+      if(props.isWhiteListed && props.isPreSale){
+        console.log(props.token)
+      await instance.methods.preSaleMint(props.saleEventNumber ,props.tokenId).send({
+        from: accounts[0],
+        value: web3.utils.toWei(props.price.toString(), "ether")
+      })
+    }
+    else if(!props.isPreSale && props.isPublicSale){
+      await instance.methods.publicMint(props.saleEventNumber, props.tokenId).send({
         from: accounts[0],
         value: web3.utils.toWei(props.price.toString(), "ether"),
       });
+    }
       if (!showMintResult) {
         setShowMintResult(true);
         setMintWasSuccessful(true);
       }
     } catch (e) {
+      console.log(e);
       setErrorMessage(e.message);
       if (!showMintResult) {
         setShowMintResult(true);
@@ -95,14 +112,6 @@ function Card(props) {
           },
         }}
       >
-        <img
-          className={styles.closeModal}
-          src={`close_x.png`}
-          onClick={() => {
-            setTokenModal(false);
-            setShowMintResult(false);
-          }}
-        />
         <img className={styles.tokenModalImage} src={`cards/${props.img}`} />
         {!showMintResult ? (
           <>
@@ -135,6 +144,14 @@ function Card(props) {
           </>
         ) : (
           <div className={styles.responseContainer}>
+                   <img
+          className={styles.closeModal}
+          src={`close_x.png`}
+          onClick={() => {
+            setTokenModal(false);
+            setShowMintResult(false);
+          }}
+        />
             {mintWasSuccessful ? (
               <>
                 <img className={styles.modalStatusImage} src="/Checkmark.png" />

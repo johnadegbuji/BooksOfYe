@@ -1,9 +1,19 @@
 import React from 'react'
 import styles from '../styles/Tab.module.css'
 import Countdown from 'react-countdown';
+let countdownDate = "2022-02-26T17:42:00.000-05:00";
+let preSaleDate = new Date('2022-02-28T13:00:00.000-05:00');
+let saleDate = new Date('2022-02-28T19:00:00.000-05:00');
+let saleEndDate = new Date('2022-03-01T19:00:00.000-05:00');
 
 const timerUpdate = () =>{
-    
+    console.log("timerUpdate Called")
+    if (Date() > preSaleDate){
+        let countdownDate = saleDate
+    console.log("countdownDateUpdated");
+    } else if (Date() > saleDate ){
+        let countdownDate = saleEndDate;
+    }
     
 }
 
@@ -27,7 +37,7 @@ function Tab(props) {
             </div>
             <div className={styles.timeRemaining}>
             <p className={styles.headerText}>Time Remaining</p>
-            <p className={styles.valuesText}><Countdown date={"2022-02-28T13:00:00.000+08:00"} onComplete={timerUpdate()}></Countdown></p>
+            <p className={styles.valuesText}><Countdown date={countdownDate} onComplete={timerUpdate()}></Countdown></p>
             </div>
         </div>
     </div>
