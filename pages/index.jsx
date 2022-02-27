@@ -209,7 +209,7 @@ function App(props) {
         </>
       ) : (
         <>
-          <h4>Oops, doesn't seem you have MetaMask installed.</h4>
+          <h4>{"Oops, doesn\'t seem you have MetaMask installed."}</h4>
           <a href="https://metamask.io/download/" className="button">
             Install MetaMask Here
           </a>
