@@ -10,13 +10,18 @@ import web3 from "../utils/web3";
 import Countdown from "react-countdown";
 
 function App(props) {
-  const [amountLeft, setAmountLeft] = useState(props.tokensLeft);
+  const [amountLeft, setAmountLeft] = useState(
+    props.tokensLeft ? props.tokensLeft : "???"
+  );
   const [saleEvent, setSaleEvent] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [metaInstalled, setMetaInstalled] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [cards, setCards] = useState([]);
   const [isWhiteListed, setIsWhiteListed] = useState(false);
+  const [chainId, setChainId] = useState("");
+  const storeChainId = "0x4";
+
   const cardName = [
     "Let There Be Light",
     "Garden Of Eden",
@@ -33,27 +38,34 @@ function App(props) {
   ];
 
   useEffect(() => {
-    getActiveSaleEvent();
-    refreshInventory();
-    isMetaMaskInstalled();
-    checkIfLoggedIn();
-    detectEthereumNetwork();
-    checkIfWhiteListed();
-    checkNetworkChanges();
-  }, []);
+    getChainId();
+  }, [metaInstalled]);
 
   useEffect(() => {
-    console.log("SALE EVENT: ", saleEvent);
-    
-  }),
-    [saleEvent];
-    
-  
+    isMetaMaskInstalled();
+    checkIfLoggedIn();
+    checkChainBeforeContractInteraction();
+  }, [chainId]);
+
+  const checkChainBeforeContractInteraction = async () => {
+    if (chainId === storeChainId) {
+      getActiveSaleEvent();
+      refreshInventory();
+      checkIfWhiteListed();
+    }
+  };
+
+  const getChainId = async () => {
+    if (metaInstalled) {
+      const chain = await window.ethereum.request({ method: "eth_chainId" });
+      setChainId(chain);
+    }
+  };
+
   const checkIfLoggedIn = async () => {
     const accounts = await web3.eth.getAccounts();
     setLoggedIn(accounts.length != 0);
   };
-
 
   const getActiveSaleEvent = async () => {
     for (let i = 0; i < 5; i++) {
@@ -85,8 +97,6 @@ function App(props) {
     //Get Minted Ids
     const ids = await instance.methods.viewMintedCards().call();
 
-    // console.log("Minted Ids: ", ids);
-
     //Remove the minted Ids from cardInfo arrays
     for (let i = 0; i < cardInfo.length; i++) {
       ids.forEach((mintedId) => {
@@ -100,8 +110,6 @@ function App(props) {
         }
       });
     }
-
-    // console.log("Card Info: ", cardInfo);
 
     const cardProps = [];
 
@@ -130,7 +138,6 @@ function App(props) {
       }
     }
 
-    // console.log(cardProps);
     setCards(cardProps);
     getTotalTokens();
   };
@@ -138,11 +145,21 @@ function App(props) {
   const isMetaMaskInstalled = () => {
     try {
       const { ethereum } = window;
-
       setMetaInstalled(Boolean(ethereum && ethereum.isMetaMask));
+
+      window.ethereum.on("chainChanged", (chainId) => {
+        setChainId(chainId);
+      });
+      window.ethereum.on("disconnect", (error) => {
+        setLoggedIn(false);
+      });
+      window.ethereum.on("accountsChanged", (accounts) => {
+        window.location.reload();
+      });
     } catch (e) {
       console.error(e);
     }
+    
   };
 
   const onClickConnect = async () => {
@@ -159,39 +176,28 @@ function App(props) {
   };
 
   const checkIfWhiteListed = async () => {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        const account = accounts[0];
-        const wl = await instance.methods.checkWhitelist(0, account).call();
-        setIsWhiteListed(wl);
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    const account = accounts[0];
+    const wl = await instance.methods.checkWhitelist(0, account).call();
+    setIsWhiteListed(wl);
   };
-
- 
-  
 
   const detectEthereumNetwork = async () => {
     web3.eth.net.getNetworkType().then(async (netId) => {
-    if (netId != "0x4"){
-      await ethereum.request({ method: 'wallet_switchEthereumChain', params:[{chainId: '0x4'}]});    
-    } 
+      if (netId != storeChainId) {
+        await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: storeChainId }],
+        });
+      }
     });
-}
+  };
 
-  const checkNetworkChanges = async () => {
-    if(window.ethereum) {
-      window.ethereum.on('chainChanged', () => {
-        window.location.reload();
-      })
-      window.ethereum.on('accountsChanged', () => {
-        window.location.reload();
-      });
-   }  
-  }
-
-  const refreshPage = ()=>{
+  const refreshPage = () => {
     window.location.reload();
- }
+  };
 
   const displayCards = (
     <div className={styles.App}>
@@ -201,10 +207,10 @@ function App(props) {
             <h5 className={styles.bookPassage}>{bookPassage[key]}</h5>
             <h3 className={styles.cardNames}>{cardName[key]}</h3>
             <div className={styles.cardContainer}>
-              {cardArray.map((card, key) => {
+              {cardArray.map((card) => {
                 return (
                   <Card
-                    key={key}
+                    key={card.tokenId}
                     refreshInventory={refreshInventory}
                     isMetaMaskInstalled={isMetaMaskInstalled}
                     checkIfLoggedIn={checkIfLoggedIn}
@@ -230,16 +236,34 @@ function App(props) {
     </div>
   );
 
+  const getConnectOrNetworkChangeText = (wrongChain, notConnected) => {
+    return chainId != storeChainId ? wrongChain : notConnected;
+  };
+
   const displayConnectScreen = (
     <div className={styles.welcomeScreen}>
       <p className={styles.welcomeSubText}>WELCOME</p>
-      <h1 className={styles.welcomeScreenText}>Please Connect Your Wallet</h1>
+      <h1 className={styles.welcomeScreenText}>
+        {metaInstalled ? getConnectOrNetworkChangeText(
+          "Please Change Your Network",
+          "Please Connect Your Wallet"
+        ) : "Please Install MetaMask"}
+      </h1>
       {metaInstalled ? (
         <>
           {showSpinner ? (
             <img src="/modalCircle.png" className="rotate" />
           ) : (
-            <button onClick={onClickConnect}>Connect MetaMask</button>
+            <button
+              onClick={
+                chainId != storeChainId ? detectEthereumNetwork : onClickConnect
+              }
+            >
+              {getConnectOrNetworkChangeText(
+                "Change Network",
+                "Connect MetaMask"
+              )}
+            </button>
           )}
         </>
       ) : (
@@ -258,7 +282,7 @@ function App(props) {
     const isPreSale = saleEvent.isPreSale;
     const isPublicSale = saleEvent.isPublicSale;
 
-    if (metaInstalled && loggedIn) {
+    if (metaInstalled && loggedIn && chainId === storeChainId) {
       if (!isPreSale && !isPublicSale) {
         if (isWhiteListed) {
           return (
@@ -267,7 +291,8 @@ function App(props) {
               <h1 className={styles.welcomeScreenText}>
                 You are on the whitelist.
                 <br></br>
-                <br></br>The Pre-Sale begins in:{" "} <br></br><br></br>
+                <br></br>The Pre-Sale begins in: <br></br>
+                <br></br>
                 <Countdown date={"2022-02-28T13:00:00.000-05:00"}>
                   <button onClick={refreshPage}>Enter Sale</button>
                 </Countdown>
@@ -283,10 +308,10 @@ function App(props) {
                 The Sale will begin after the Pre-Sale has finished, if there is
                 remaining stock.
                 <br></br>
-                <br></br>The Pre-Sale begins in:{" "}<br></br><br></br>
+                <br></br>The Pre-Sale begins in: <br></br>
+                <br></br>
                 <Countdown date={"2022-02-28T13:00:00.000-05:00"}></Countdown>
               </h1>
-              
             </>
           );
         }

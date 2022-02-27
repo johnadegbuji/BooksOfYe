@@ -11,6 +11,7 @@ function Card(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [mintWasSuccessful, setMintWasSuccessful] = useState(false);
   const [showMintResult, setShowMintResult] = useState(false);
+  const [isSigning, setIsSigning] = useState(false);
 
   const handleBuyClick = async () => {
     setTokenModal(true);
@@ -23,15 +24,15 @@ function Card(props) {
 
       await props.checkIfWhiteListed();
 
-      console.log(props.isWhiteListed);
-
       if (props.isWhiteListed && props.isPreSale) {
-        console.log(props.token);
         await instance.methods
           .preSaleMint(props.saleEventNumber, props.tokenId)
           .send({
             from: accounts[0],
             value: web3.utils.toWei(props.price.toString(), "ether"),
+          })
+          .on("transactionHash", () => {
+            setIsSigning(true);
           });
       } else if (!props.isPreSale && props.isPublicSale) {
         await instance.methods
@@ -39,14 +40,17 @@ function Card(props) {
           .send({
             from: accounts[0],
             value: web3.utils.toWei(props.price.toString(), "ether"),
+          })
+          .on("transactionHash", () => {
+            setIsSigning(true);
           });
       }
       if (!showMintResult) {
-        setShowMintResult(true);
+        setShowMintResult(true)
         setMintWasSuccessful(true);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setErrorMessage(e.message);
       if (!showMintResult) {
         setShowMintResult(true);
@@ -54,7 +58,6 @@ function Card(props) {
       }
     } finally {
       props.isMetaMaskInstalled();
-      props.refreshInventory();
       props.checkIfLoggedIn();
     }
   };
@@ -104,7 +107,6 @@ function Card(props) {
       <ReactModal
         className={styles.tokenModal}
         isOpen={tokenModal}
-        // onRequestClose={() => setExperienceModalIsOpen(false)}
         preventScroll={true}
         style={{
           overlay: {
@@ -118,14 +120,23 @@ function Card(props) {
         {!showMintResult ? (
           <>
             <div className={styles.responseContainer}>
+              <img
+                className={styles.closeModal}
+                src={`close_x.png`}
+                onClick={() => {
+                  setTokenModal(false);
+                  setShowMintResult(false);
+                }}
+              />
               <img className="rotate" src={`/modalCircle.png`} />
               <h3 className={styles.tokenModalHeading}>
-                Please Sign The Transaction
+                {isSigning ? "Signing" : "Please Sign The Transaction"}
               </h3>
               <div className={styles.messageContainer}>
                 <p className={styles.tokenModalText}>
-                  Note that if the transaction fails on the blockchain, the
-                  purchase will be reversed
+                  {isSigning
+                    ? ""
+                    : "Note that if the transaction fails on the blockchain, the purchase will be reversed"}
                 </p>
                 <hr className={styles.line}></hr>
                 <div className={styles.tokenModalLower}>
@@ -153,6 +164,7 @@ function Card(props) {
               onClick={() => {
                 setTokenModal(false);
                 setShowMintResult(false);
+                props.refreshInventory();
               }}
             />
             {mintWasSuccessful ? (
