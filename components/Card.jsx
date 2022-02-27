@@ -33,9 +33,6 @@ function Card(props) {
           })
           .on("transactionHash", () => {
             setIsSigning(true);
-          })
-          .on("confirmation", () => {
-            props.refreshInventory();
           });
       } else if (!props.isPreSale && props.isPublicSale) {
         await instance.methods
@@ -46,9 +43,6 @@ function Card(props) {
           })
           .on("transactionHash", () => {
             setIsSigning(true);
-          })
-          .on("confirmation", () => {
-            props.refreshInventory();
           });
       }
       if (!showMintResult) {
