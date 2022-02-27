@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from '../styles/Tab.module.css'
 import Countdown from 'react-countdown';
-let countdownDate = "2022-02-26T17:42:00.000-05:00";
+let countdownDate = "2022-02-28T17:42:00.000-05:00";
 let preSaleDate = new Date('2022-02-28T13:00:00.000-05:00');
 let saleDate = new Date('2022-02-28T19:00:00.000-05:00');
 let saleEndDate = new Date('2022-03-01T19:00:00.000-05:00');
