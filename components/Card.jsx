@@ -67,13 +67,15 @@ function Card(props) {
       return "Mint Limit Reached";
     else if(errorMessage.includes("insufficient funds"))
     return "Insufficient Funds"
-    else return errorMessage.replace("MetaMask Tx Signature:", "");
+    else if(errorMessage.includes("MetaMask Tx Signature:"))
+    return errorMessage.replace("MetaMask Tx Signature:", "");
+    else return "Transaction Failed"
   };
 
   return (
     <>
       <div className={styles.card}>
-        <img className={styles.cardImage} src={`cards/${props.img}`} />
+        <img onClick={props.amount === 0 ? () => {} :handleBuyClick} className={styles.cardImage} src={`cards/${props.img}`} />
 
         {props.amount > 0 ? (
           <div className={styles.cardTextContainer}>
