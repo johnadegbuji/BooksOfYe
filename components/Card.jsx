@@ -33,6 +33,9 @@ function Card(props) {
           })
           .on("transactionHash", () => {
             setIsSigning(true);
+          })
+          .on("confirmation", () => {
+            props.refreshInventory();
           });
       } else if (!props.isPreSale && props.isPublicSale) {
         await instance.methods
@@ -43,10 +46,13 @@ function Card(props) {
           })
           .on("transactionHash", () => {
             setIsSigning(true);
+          })
+          .on("confirmation", () => {
+            props.refreshInventory();
           });
       }
       if (!showMintResult) {
-        setShowMintResult(true)
+        setShowMintResult(true);
         setMintWasSuccessful(true);
       }
     } catch (e) {
@@ -65,17 +71,22 @@ function Card(props) {
   const formatErrorMessage = () => {
     if (errorMessage.includes("Mint Limit Reached"))
       return "Mint Limit Reached";
-    else if(errorMessage.includes("insufficient funds"))
-    return "Insufficient Funds"
-    else if(errorMessage.includes("MetaMask Tx Signature:"))
-    return errorMessage.replace("MetaMask Tx Signature:", "");
-    else return "Transaction Failed On The Blockchain, Your Purchase Was Reversed"
+    else if (errorMessage.includes("insufficient funds"))
+      return "Insufficient Funds";
+    else if (errorMessage.includes("MetaMask Tx Signature:"))
+      return errorMessage.replace("MetaMask Tx Signature:", "");
+    else
+      return "Transaction Failed On The Blockchain, Your Purchase Was Reversed";
   };
 
   return (
     <>
       <div className={styles.card}>
-        <img onClick={props.amount === 0 ? () => {} :handleBuyClick} className={styles.cardImage} src={`cards/${props.img}`} />
+        <img
+          onClick={props.amount === 0 ? () => {} : handleBuyClick}
+          className={styles.cardImage}
+          src={`cards/${props.img}`}
+        />
 
         {props.amount > 0 ? (
           <div className={styles.cardTextContainer}>
@@ -130,6 +141,7 @@ function Card(props) {
                 onClick={() => {
                   setTokenModal(false);
                   setShowMintResult(false);
+                  props.refreshInventory();
                 }}
               />
               <img className="rotate" src={`/modalCircle.png`} />
