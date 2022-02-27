@@ -65,6 +65,8 @@ function Card(props) {
   const formatErrorMessage = () => {
     if (errorMessage.includes("Mint Limit Reached"))
       return "Mint Limit Reached";
+    else if(errorMessage.includes("insufficient funds"))
+    return "Insufficient Funds"
     else return errorMessage.replace("MetaMask Tx Signature:", "");
   };
 
