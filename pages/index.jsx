@@ -39,13 +39,15 @@ function App(props) {
     checkIfLoggedIn();
     detectEthereumNetwork();
     checkIfWhiteListed();
+    checkNetworkChanges();
   }, []);
 
   useEffect(() => {
     console.log("SALE EVENT: ", saleEvent);
+    
   }),
     [saleEvent];
-
+    
   
   const checkIfLoggedIn = async () => {
     const accounts = await web3.eth.getAccounts();
@@ -170,11 +172,26 @@ function App(props) {
 
   const detectEthereumNetwork = async () => {
     web3.eth.net.getNetworkType().then(async (netId) => {
-    if (netId != 1){
-      await ethereum.request({ method: 'wallet_switchEthereumChain', params:[{chainId: '0x4'}]});      
+    if (netId != "0x4"){
+      await ethereum.request({ method: 'wallet_switchEthereumChain', params:[{chainId: '0x4'}]});    
     } 
     });
 }
+
+  const checkNetworkChanges = async () => {
+    if(window.ethereum) {
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      })
+      window.ethereum.on('accountsChanged', () => {
+        window.location.reload();
+      });
+   }  
+  }
+
+  const refreshPage = ()=>{
+    window.location.reload();
+ }
 
   const displayCards = (
     <div className={styles.App}>
@@ -250,8 +267,10 @@ function App(props) {
               <h1 className={styles.welcomeScreenText}>
                 You are on the whitelist.
                 <br></br>
-                <br></br>The Pre-Sale begins in:{" "}
-                <Countdown date={"2022-02-28T13:00:00.000-05:00"}></Countdown>
+                <br></br>The Pre-Sale begins in:{" "} <br></br><br></br>
+                <Countdown date={"2022-02-28T13:00:00.000-05:00"}>
+                  <button onClick={refreshPage}>Enter Sale</button>
+                </Countdown>
               </h1>
               ;
             </>
@@ -260,14 +279,14 @@ function App(props) {
           return (
             <>
               <p className={styles.welcomeSubText}>THANK YOU</p>
-              <h1 className={styles.welcomeScreenText2}>
+              <h1 className={styles.welcomeScreenText}>
                 The Sale will begin after the Pre-Sale has finished, if there is
                 remaining stock.
                 <br></br>
-                <br></br>The Pre-Sale begins in:{" "}
+                <br></br>The Pre-Sale begins in:{" "}<br></br><br></br>
                 <Countdown date={"2022-02-28T13:00:00.000-05:00"}></Countdown>
               </h1>
-              ;
+              
             </>
           );
         }
@@ -282,7 +301,7 @@ function App(props) {
         return (
           <>
             <p className={styles.welcomeSubText}>THANK YOU</p>
-            <h1 className={styles.welcomeScreenText2}>
+            <h1 className={styles.welcomeScreenText}>
               The Sale will begin after the Pre-Sale has finished, if there is
               remaining stock.
             </h1>
