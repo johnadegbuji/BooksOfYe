@@ -1,29 +1,10 @@
 import React from "react";
 import styles from "../styles/Tab.module.css";
 import Countdown from "react-countdown";
-let countdownDate = "2022-02-26T17:52:00.000-08:00";
-let preSaleDate = new Date("2022-02-26T17:44:00.000-08:00");
-let saleDate = new Date("2022-02-28T19:00:00.000-08:00");
-let saleEndDate = new Date("2022-03-01T19:00:00.000-08:00");
+let preSaleDate = new Date("2022-02-28T13:00:00.000-05:00");
+let saleDate = new Date("2022-02-28T19:19:00.000-05:00");
+let saleEndDate = new Date("2022-03-01T19:00:00.000-05:00");
 
-// const renderer = ({ days, hours, minutes, seconds, completed }) => {
-//   if (completed && Date() > preSaleDate ) {
-//     // Render a completed state
-//     return <span>{hours}:{minutes}:{seconds}</span>;
-//   } else {
-//     // Render a countdown
-
-//   }
-// };
-const timerUpdate = () => {
-  console.log("timerUpdate Called");
-  if (Date() > preSaleDate) {
-    let countdownDate = saleDate;
-    console.log("countdownDateUpdated");
-  } else if (Date() > saleDate) {
-    let countdownDate = saleEndDate;
-  }
-};
 
 function Tab(props) {
   return (
@@ -55,7 +36,13 @@ function Tab(props) {
             <div className={styles.timeRemaining}>
               <p className={styles.headerText}>Time Remaining</p>
               <p className={styles.valuesText}>
-                <Countdown date={countdownDate}></Countdown>
+                <Countdown date={preSaleDate}>
+                    <Countdown date={saleDate}>
+                        <Countdown date={saleEndDate}>
+                            <p className={styles.valuesText}>Sale Is Over!</p>
+                        </Countdown>
+                    </Countdown>
+                </Countdown>
               </p>
             </div>
           </div>

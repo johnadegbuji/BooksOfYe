@@ -37,6 +37,7 @@ function App(props) {
     refreshInventory();
     isMetaMaskInstalled();
     checkIfLoggedIn();
+    detectEthereumNetwork();
     checkIfWhiteListed();
   }, []);
 
@@ -45,12 +46,13 @@ function App(props) {
   }),
     [saleEvent];
 
+  
   const checkIfLoggedIn = async () => {
     const accounts = await web3.eth.getAccounts();
     setLoggedIn(accounts.length != 0);
   };
 
-  //Returns 1st active sale event that it finds from least to greatest
+
   const getActiveSaleEvent = async () => {
     for (let i = 0; i < 5; i++) {
       const sEvent = await instance.methods.viewSaleStatus(i).call();
@@ -155,19 +157,24 @@ function App(props) {
   };
 
   const checkIfWhiteListed = async () => {
-    if (isMetaMaskInstalled()) {
-      try {
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
         });
         const account = accounts[0];
         const wl = await instance.methods.checkWhitelist(0, account).call();
         setIsWhiteListed(wl);
-      } catch (e) {
-        console.error(e);
-      }
-    }
   };
+
+ 
+  
+
+  const detectEthereumNetwork = async () => {
+    web3.eth.net.getNetworkType().then(async (netId) => {
+    if (netId != 1){
+      await ethereum.request({ method: 'wallet_switchEthereumChain', params:[{chainId: '0x4'}]});      
+    } 
+    });
+}
 
   const displayCards = (
     <div className={styles.App}>
@@ -244,7 +251,7 @@ function App(props) {
                 You are on the whitelist.
                 <br></br>
                 <br></br>The Pre-Sale begins in:{" "}
-                <Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown>
+                <Countdown date={"2022-02-28T13:00:00.000-05:00"}></Countdown>
               </h1>
               ;
             </>
@@ -258,7 +265,7 @@ function App(props) {
                 remaining stock.
                 <br></br>
                 <br></br>The Pre-Sale begins in:{" "}
-                <Countdown date={"2022-02-28T13:00:00.000+08:00"}></Countdown>
+                <Countdown date={"2022-02-28T13:00:00.000-05:00"}></Countdown>
               </h1>
               ;
             </>

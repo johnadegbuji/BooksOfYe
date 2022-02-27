@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",
+    "@truffle/hdwallet-provider": "^2.0.3",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-countdown": "^2.3.2",
