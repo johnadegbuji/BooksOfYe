@@ -69,7 +69,7 @@ function Card(props) {
     return "Insufficient Funds"
     else if(errorMessage.includes("MetaMask Tx Signature:"))
     return errorMessage.replace("MetaMask Tx Signature:", "");
-    else return "Transaction Failed"
+    else return "Transaction Failed On The Blockchain, Your Purchase Was Reversed"
   };
 
   return (
