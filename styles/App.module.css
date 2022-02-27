@@ -105,6 +105,14 @@ color: #FFFFFF;
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+  .welcomeScreenText{
+    font-family: "Vaporetta";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    color: #fff;
+    margin-top: 35px;
+  }
   .logo{
     margin: 40px 20px;
   }

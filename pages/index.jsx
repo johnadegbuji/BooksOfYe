@@ -41,8 +41,9 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    console.log("SALE EVENT: ", saleEvent)
-  }),[saleEvent]
+    console.log("SALE EVENT: ", saleEvent);
+  }),
+    [saleEvent];
 
   const checkIfLoggedIn = async () => {
     const accounts = await web3.eth.getAccounts();
@@ -131,9 +132,13 @@ function App(props) {
   };
 
   const isMetaMaskInstalled = () => {
-    const { ethereum } = window;
+    try {
+      const { ethereum } = window;
 
-    setMetaInstalled(Boolean(ethereum && ethereum.isMetaMask));
+      setMetaInstalled(Boolean(ethereum && ethereum.isMetaMask));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const onClickConnect = async () => {
@@ -150,12 +155,18 @@ function App(props) {
   };
 
   const checkIfWhiteListed = async () => {
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    const account = accounts[0];
-    const wl = await instance.methods.checkWhitelist(0, account).call();
-    setIsWhiteListed(wl);
+    if (isMetaMaskInstalled()) {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const account = accounts[0];
+        const wl = await instance.methods.checkWhitelist(0, account).call();
+        setIsWhiteListed(wl);
+      } catch (e) {
+        console.error(e);
+      }
+    }
   };
 
   const displayCards = (
@@ -209,7 +220,7 @@ function App(props) {
         </>
       ) : (
         <>
-          <h4>{"Oops, doesn\'t seem you have MetaMask installed."}</h4>
+          <h4>{"Oops, doesn't seem you have MetaMask installed."}</h4>
           <a href="https://metamask.io/download/" className="button">
             Install MetaMask Here
           </a>
@@ -223,8 +234,7 @@ function App(props) {
     const isPreSale = saleEvent.isPreSale;
     const isPublicSale = saleEvent.isPublicSale;
 
-    if (loggedIn) {
-
+    if (metaInstalled && loggedIn) {
       if (!isPreSale && !isPublicSale) {
         if (isWhiteListed) {
           return (
@@ -258,7 +268,10 @@ function App(props) {
         return displayCards;
       } else if (isActive && isPublicSale && !isPreSale) {
         return displayCards;
-      } else if ((isPreSale && !isPublicSale && !isWhiteListed) || (isPreSale && isPublicSale && !isWhiteListed)) {
+      } else if (
+        (isPreSale && !isPublicSale && !isWhiteListed) ||
+        (isPreSale && isPublicSale && !isWhiteListed)
+      ) {
         return (
           <>
             <p className={styles.welcomeSubText}>THANK YOU</p>

@@ -24,10 +24,20 @@ body {
 
     background-color: #111010;
   }
-
+button{
+  padding:10px;
+  font-family: "Inter";
+  font-size: large;
+  font-weight: bold;
+  border-radius: 3px;
+  border: none;
+  transition: ease .2s;
+  cursor: pointer;
+}
 a {
   color: inherit;
   text-decoration: none;
+  color: white
 }
 
 * {

@@ -16,29 +16,31 @@ function Card(props) {
     setTokenModal(true);
 
     try {
-
-      props.getActiveSaleEvent(); 
+      props.getActiveSaleEvent();
 
       const accounts = await web3.eth.getAccounts();
       props.refreshInventory();
 
-      await props.checkIfWhiteListed(); 
+      await props.checkIfWhiteListed();
 
-      console.log(props.isWhiteListed)
-      
-      if(props.isWhiteListed && props.isPreSale){
-        console.log(props.token)
-      await instance.methods.preSaleMint(props.saleEventNumber ,props.tokenId).send({
-        from: accounts[0],
-        value: web3.utils.toWei(props.price.toString(), "ether")
-      })
-    }
-    else if(!props.isPreSale && props.isPublicSale){
-      await instance.methods.publicMint(props.saleEventNumber, props.tokenId).send({
-        from: accounts[0],
-        value: web3.utils.toWei(props.price.toString(), "ether"),
-      });
-    }
+      console.log(props.isWhiteListed);
+
+      if (props.isWhiteListed && props.isPreSale) {
+        console.log(props.token);
+        await instance.methods
+          .preSaleMint(props.saleEventNumber, props.tokenId)
+          .send({
+            from: accounts[0],
+            value: web3.utils.toWei(props.price.toString(), "ether"),
+          });
+      } else if (!props.isPreSale && props.isPublicSale) {
+        await instance.methods
+          .publicMint(props.saleEventNumber, props.tokenId)
+          .send({
+            from: accounts[0],
+            value: web3.utils.toWei(props.price.toString(), "ether"),
+          });
+      }
       if (!showMintResult) {
         setShowMintResult(true);
         setMintWasSuccessful(true);
@@ -115,43 +117,44 @@ function Card(props) {
         <img className={styles.tokenModalImage} src={`cards/${props.img}`} />
         {!showMintResult ? (
           <>
-          <div className={styles.responseContainer}>
-
-            <img className="rotate" src={`/modalCircle.png`} />
-            <h3 className={styles.tokenModalHeading}>
-              Please Sign The Transaction
-            </h3>
-            <div className={styles.messageContainer}>
-              <p className={styles.tokenModalText}>
-                Note that if the transaction fails on the blockchain, the
-                purchase will be reversed
-              </p>
-              <hr className={styles.line}></hr>
-              <div className={styles.tokenModalLower}>
-                <div className={styles.tokenModalLowerLeft}>
-                  <h5 className={styles.tokenModalCardName}>
-                    {props.cardName}
-                  </h5>
-                  <h5 className={styles.tokenModalCardColor}>{props.color}</h5>
-                </div>
-                <div className={styles.tokenModalLowerRight}>
-                  <img className={styles.etherIcon} src="/ether.png"></img>
-                  <h5 className={styles.tokenModalPrice}>{props.price}</h5>
+            <div className={styles.responseContainer}>
+              <img className="rotate" src={`/modalCircle.png`} />
+              <h3 className={styles.tokenModalHeading}>
+                Please Sign The Transaction
+              </h3>
+              <div className={styles.messageContainer}>
+                <p className={styles.tokenModalText}>
+                  Note that if the transaction fails on the blockchain, the
+                  purchase will be reversed
+                </p>
+                <hr className={styles.line}></hr>
+                <div className={styles.tokenModalLower}>
+                  <div className={styles.tokenModalLowerLeft}>
+                    <h5 className={styles.tokenModalCardName}>
+                      {props.cardName}
+                    </h5>
+                    <h5 className={styles.tokenModalCardColor}>
+                      {props.color}
+                    </h5>
+                  </div>
+                  <div className={styles.tokenModalLowerRight}>
+                    <img className={styles.etherIcon} src="/ether.png"></img>
+                    <h5 className={styles.tokenModalPrice}>{props.price}</h5>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </>
         ) : (
           <div className={styles.responseContainer}>
-                   <img
-          className={styles.closeModal}
-          src={`close_x.png`}
-          onClick={() => {
-            setTokenModal(false);
-            setShowMintResult(false);
-          }}
-        />
+            <img
+              className={styles.closeModal}
+              src={`close_x.png`}
+              onClick={() => {
+                setTokenModal(false);
+                setShowMintResult(false);
+              }}
+            />
             {mintWasSuccessful ? (
               <>
                 <img className={styles.modalStatusImage} src="/Checkmark.png" />
@@ -162,18 +165,21 @@ function Card(props) {
                     purchase will be reversed
                   </p>
                   <hr className={styles.line}></hr>
-                <div className={styles.tokenModalLower}>
-                  <div className={styles.tokenModalLowerLeft}>
-                    <h5 className={styles.tokenModalCardName}>{props.cardName}</h5>
-                    <h5 className={styles.tokenModalCardColor}>{props.color}</h5>
-                  </div>
-                  <div className={styles.tokenModalLowerRight}>
+                  <div className={styles.tokenModalLower}>
+                    <div className={styles.tokenModalLowerLeft}>
+                      <h5 className={styles.tokenModalCardName}>
+                        {props.cardName}
+                      </h5>
+                      <h5 className={styles.tokenModalCardColor}>
+                        {props.color}
+                      </h5>
+                    </div>
+                    <div className={styles.tokenModalLowerRight}>
                       <img className={styles.etherIcon} src="/ether.png"></img>
                       <h5 className={styles.tokenModalPrice}>{props.price}</h5>
+                    </div>
                   </div>
                 </div>
-                </div>
-                
               </>
             ) : (
               <>
@@ -182,12 +188,14 @@ function Card(props) {
                 <div className={styles.messageContainer}>
                   <p className={styles.errorMessage}>{formatErrorMessage()}</p>
                   <hr className={styles.line}></hr>
-                <div className={styles.tokenModalLower}>
+                  <div className={styles.tokenModalLower}>
                     <div className={styles.tokenModalLowerLeft}>
                       <h5 className={styles.tokenModalCardName}>
                         {props.cardName}
                       </h5>
-                      <h5 className={styles.tokenModalCardColor}>{props.color}</h5>
+                      <h5 className={styles.tokenModalCardColor}>
+                        {props.color}
+                      </h5>
                     </div>
                     <div className={styles.tokenModalLowerRight}>
                       <img className={styles.etherIcon} src="/ether.png"></img>

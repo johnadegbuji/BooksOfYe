@@ -1,63 +1,85 @@
-.tab{
-    background: #181616;
-    backdrop-filter: blur(80px);
-    height: 100px;
-    width: 100%; 
-    position: fixed;
-    bottom: 0;
-    display: flex;  
-    color: #F3EEE4;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-style: normal;
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    line-height: 140%;
-    align-items: center;
+.tab {
+  background: #181616;
+  backdrop-filter: blur(80px);
+  height: 100px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  color: #f3eee4;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  line-height: 140%;
+  align-items: center;
 }
 
-
-.tabLeft{
-    display: flex;
-    margin-left: 50px;
+.tabLeft {
+  display: flex;
+  margin-left: 50px;
 }
 
-.tabRight{
-    display: flex;
-    margin-left: auto;
-    margin-right: 50px;
+.tabRight {
+  display: flex;
+  margin-left: auto;
+  margin-right: 50px;
 }
 
-.ml{
-    margin-left: 40px;
+.ml {
+  margin-left: 40px;
 }
 
-.mr{
-    margin-right: 40px;
+.mr {
+  margin-right: 40px;
 }
 
-.headerText{
-    font-family: 'Vaporetta';
+.headerText {
+  font-family: "Vaporetta";
 }
-.valuesText{
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
+.valuesText {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
 }
 
+.soldOutText {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.soldOutText > p {
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.soldOutText > h6 {
+  margin: 0;
+  font-family: Vaporetta;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 26px;
+  line-height: 130%;
+  text-transform: none;
+}
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-    .tab{
+  .tab {
     background: #181616;
     backdrop-filter: blur(80px);
     height: 20%;
-    width: 100%; 
+    width: 100%;
     position: fixed;
     bottom: 0;
-    display: flex;  
-    color: #F3EEE4;
+    display: flex;
+    color: #f3eee4;
     text-transform: uppercase;
     font-weight: 600;
     font-style: normal;
@@ -65,76 +87,72 @@
     letter-spacing: 0.12em;
     line-height: 140%;
     align-items: center;
-    
-    
-    }
-    .tabLeft{
-        width: 50%;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
+  }
+  .tabLeft {
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+  }
 
-    }
-    
-    .tabRight{
-        width: 50%;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
-    }
-    .cardsRemaining{
-        width: 100%;
-        padding: 0px 40px 0px 40px;
-        text-align: left;
-        font-size: 12px;
-        margin-bottom: 0px;
-        margin-left: auto;
-        margin-right: auto;
+  .tabRight {
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+  }
+  .cardsRemaining {
+    width: 100%;
+    padding: 0px 40px 0px 40px;
+    text-align: left;
+    font-size: 12px;
+    margin-bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ml {
+    width: 100%;
+    padding: 0px 40px 0px 40px;
+    text-align: left;
+    font-size: 12px;
+    margin-left: 0px;
+    font-family: "inter";
+  }
 
-    }
-    .ml{
-        width: 100%;
-        padding: 0px 40px 0px 40px;
-        text-align: left;
-        font-size: 12px;
-        margin-left: 0px;
-        font-family: 'inter';
-    }
+  .mr {
+    width: 100%;
+    padding: 0px 40px 0px 40px;
+    text-align: left;
+    font-size: 12px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-    .mr{
-        width: 100%;
-        padding: 0px 40px 0px 40px;
-        text-align: left;
-        font-size: 12px;
-        margin-bottom: 20px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+  .timeRemaining {
+    width: 100%;
+    padding: 0px 40px 0px 40px;
+    text-align: left;
+    font-size: 12px;
+    margin-left: 0px;
+    font-family: "inter";
+  }
 
-    .timeRemaining{
-        width: 100%;
-        padding: 0px 40px 0px 40px;
-        text-align: left;
-        font-size: 12px;
-        margin-left: 0px;
-        font-family: 'inter';
-    }
-
-    .headerText{
-        font-family: 'Vaporetta';
-        font-size: 12px;
-        width: 100%
-    }
-    .valuesText{
-        margin-top: -8px;
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 12px;
-    }
-
+  .headerText {
+    font-family: "Vaporetta";
+    font-size: 12px;
+    width: 100%;
+  }
+  .valuesText {
+    margin-top: -8px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+  }
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {}
+@media only screen and (min-width: 600px) {
+}
