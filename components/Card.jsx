@@ -77,13 +77,13 @@ function Card(props) {
     <>
       <div className={styles.card}>
         <img
-          onClick={props.amount === 0 ? () => {} : handleBuyClick}
+          
           className={styles.cardImage}
           src={`cards/${props.img}`}
         />
 
         {props.amount > 0 ? (
-          <div className={styles.cardTextContainer}>
+          <div className={styles.cardTextContainer} onClick={props.amount === 0 ? () => {} : handleBuyClick}>
             <p className={styles.cardBuy} onClick={handleBuyClick}>
               buy
             </p>
